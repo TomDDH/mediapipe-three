@@ -89,7 +89,7 @@ class FaceTracker {
     const occIndexArray = new Uint16Array(occlusion.index)
     occlusionGeometry.setAttribute('position', new BufferAttribute(occPositionArray, 3))
     occlusionGeometry.setIndex(new BufferAttribute(occIndexArray, 1))
-    const occlusionMaterial = new MeshBasicMaterial({ color: 0xffff00, colorWrite: true })
+    const occlusionMaterial = new MeshBasicMaterial({ color: 0xffffff, colorWrite: false })
     this.occlusion = new Mesh(occlusionGeometry, occlusionMaterial)
     this.occlusion.scale.setScalar(.5)
     this.occlusion.position.set(0, 0.1, -0.35)
