@@ -1,0 +1,32 @@
+{
+  "name": "mediapipe-three",
+  "version": "0.1.1",
+  "description": "",
+  "type": "module",
+  "main": "./dist/mediapipe-three.umd.cjs",
+  "module": "./dist/mediapipe-three.js",
+  "exports": {
+    ".": {
+      "import": "./dist/mediapipe-three.js",
+      "require": "./dist/mediapipe-three.umd.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "example": "vite example",
+    "push": "npm version patch && git push --follow-tags",
+    "push:minor": "npm version minor && git push --follow-tags",
+    "push:major": "npm version major && git push --follow-tags"
+  },
+  "devDependencies": {
+    "@types/three": "^0.184.1",
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "@mediapipe/tasks-vision": "^0.10.35",
+    "three": "^0.184.0"
+  }
+}
