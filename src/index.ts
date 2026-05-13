@@ -1,7 +1,5 @@
-// import * as THREE from 'three'
 import { BufferGeometry, WebGLRenderer, PerspectiveCamera, Group, Mesh, CanvasTexture, Vector2, Scene, MathUtils, BufferAttribute, MeshBasicMaterial, SRGBColorSpace, Vector3 } from 'three'
 import { FilesetResolver, FaceLandmarker, FaceLandmarkerResult, NormalizedLandmark } from '@mediapipe/tasks-vision'
-
 import indices from './indices.json'
 import uvidx from './uv.json'
 import occlusion from "./occlusion.json"
@@ -19,7 +17,7 @@ class FaceTracker {
   private halfW: number
   public facingMode: "user" | "environment" = "user";
   private video: HTMLVideoElement
-  private canvas: OffscreenCanvas
+  private canvas: HTMLCanvasElement | OffscreenCanvas
   private bgTexture: CanvasTexture | null = null
   private width: number
   private height: number
@@ -111,14 +109,23 @@ class FaceTracker {
     this.video.style.width = "2px"
     document.body.appendChild(this.video)
 
-    this.canvas = new OffscreenCanvas(this.width, this.height)
+    this.canvas = document.createElement("canvas")
+    this.canvas.width = this.width
+    this.canvas.height = this.height
+
+    document.body.appendChild(this.canvas)
+    this.canvas.style.position = "absolute"
+    this.canvas.style.top = "0"
+    this.canvas.style.left = "0"
+    this.canvas.style.width = "200px"
+    this.canvas.style.zIndex = "101"
 
     this.onLoad = () => { }
 
     this.init(forVisionTasksWasmPath, modelAssetPath)
   }
 
-  resize(width: number, height: number) {
+  setSize(width: number, height: number) {
     this.width = width
     this.height = height
     this.ratio = this.width / this.height
@@ -126,6 +133,10 @@ class FaceTracker {
     this.halfW = this.halfH * this.ratio
     this.canvas.width = this.width
     this.canvas.height = this.height
+    if (this.bgTexture) {
+      this.bgTexture.dispose()
+      this.addBackground()
+    }
   }
 
 
@@ -204,7 +215,7 @@ class FaceTracker {
       this.tempTransform.matrix.decompose(this.tempTransform.position, this.tempTransform.quaternion, this.tempTransform.scale);
       this.anchors.head.position.copy(this.tempTransform.position)
       this.anchors.head.quaternion.copy(this.tempTransform.quaternion)
-      this.anchors.head.scale.setScalar(30 * this.halfW * this.tempTransform.scale.x)
+      this.anchors.head.scale.setScalar(20 * this.tempTransform.scale.x)
       this.faceGroup.updateMatrix()
       this.faceGroup.updateMatrixWorld(true)
     }
@@ -232,6 +243,9 @@ class FaceTracker {
   renderBg() {
     const canvasRatio = this.width / this.height;
     let drawWidth, drawHeight;
+
+    // console.log("videoRatio", this.videoRatio, "canvasRatio", canvasRatio)
+
     if (canvasRatio > this.videoRatio) {
       drawWidth = this.width
       drawHeight = this.width / this.videoRatio

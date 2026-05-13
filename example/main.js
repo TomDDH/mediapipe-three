@@ -54,24 +54,6 @@ function init() {
     faceTracker.occlusion.visible = true
     faceTracker.faceMesh.material = new THREE.MeshBasicMaterial({ color: 0xffffff });
 
-    const loader = new GLTFLoader()
-    loader.load("./occlusion.glb", (gltf) => {
-        const mask = gltf.scene
-        //   mask.scale.setScalar(0.01)
-        // console.log("mask loaded", mask)
-        gltf.scene.traverse((child) => {
-            if (child instanceof THREE.Mesh) {
-                console.log("mesh", child.geometry)
-                console.log("mesh", Array.from(child.geometry.attributes.position.array).map(v => parseFloat(v.toFixed(6))))
-                console.log("mesh", Array.from(child.geometry.index.array))
-
-                // console.log("mesh", Array.from(child.geometry.attributes.in.array).map(v => parseFloat(v.toFixed(6))))
-
-            }
-        })
-        //   faceTracker.anchors.head.add(mask)
-    })
-
 
     scene.add(new THREE.AxesHelper(1))
 
@@ -85,6 +67,11 @@ function init() {
         camera.updateProjectionMatrix()
         renderer.setSize(window.innerWidth, window.innerHeight)
         // camera2 is fixed size, no resize needed
+        faceTracker.setSize(window.innerWidth, window.innerHeight) // notify faceTracker of resize if needed
+        const PIP_H = 400 * window.innerHeight / window.innerWidth
+        renderer2.setSize(PIP_W, PIP_H)
+        camera2.aspect = PIP_W / PIP_H
+        camera2.updateProjectionMatrix()
     })
 
     function animate() {
