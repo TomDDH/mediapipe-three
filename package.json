@@ -1,7 +1,17 @@
 {
   "name": "mediapipe-three",
   "version": "0.1.1",
-  "description": "",
+  "description": "Three.js integration for MediaPipe face landmark detection — attach 3D objects to face anchors (head, eyes) with live camera background rendering.",
+  "author": "Dadong Hu <hudadong1@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "mediapipe",
+    "face-landmark",
+    "three.js",
+    "augmented-reality",
+    "face-tracking",
+    "webgl"
+  ],
   "type": "module",
   "main": "./dist/mediapipe-three.umd.cjs",
   "module": "./dist/mediapipe-three.js",
